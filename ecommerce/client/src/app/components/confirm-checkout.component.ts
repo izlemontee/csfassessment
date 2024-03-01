@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartStore } from '../cart.store';
-import { LineItem } from '../models';
+import { Cart, LineItem, Order } from '../models';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-confirm-checkout',
@@ -13,6 +14,7 @@ export class ConfirmCheckoutComponent implements OnInit{
   // TODO Task 3
   private fb = inject(FormBuilder)
   private cartStore = inject(CartStore)
+  private productService = inject(ProductService)
 
   checkoutForm !: FormGroup
   cart!:LineItem[]
@@ -49,6 +51,28 @@ export class ConfirmCheckoutComponent implements OnInit{
       const product = price*qty
       this.total+=product
     }
+  }
+
+  checkout(){
+    const name= this.checkoutForm.value.name
+    const address= this.checkoutForm.value.address
+    const priority= this.checkoutForm.value.priority
+    const comments= this.checkoutForm.value.comments
+
+    const cart:Cart={
+      lineItems:this.cart
+    }
+
+    var order:Order={
+      name:name,
+      address:address,
+      priority:priority,
+      comments:comments,
+      cart:cart
+    }
+
+    console.log(order)
+    this.productService.checkout(order)
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, inject } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LineItem} from '../models';
 import { CartStore } from '../cart.store';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-order-form',
@@ -14,6 +15,7 @@ export class OrderFormComponent implements OnInit {
 
   private fb = inject(FormBuilder)
   private cartStore = inject(CartStore)
+  private productService = inject(ProductService)
 
   @Input({ required: true })
   productId!: string
