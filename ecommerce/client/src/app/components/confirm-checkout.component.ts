@@ -79,13 +79,15 @@ export class ConfirmCheckoutComponent implements OnInit{
     this.productService.checkout(order).then(
       (value)=>{this.routeService.changeCheckoutSuccessful(true)
         this.routeService.changeOrderId(value.orderId)
+        this.router.navigate(['/'])
       }
     ).catch(
       (err)=>{this.routeService.changeCheckoutSuccessful(false)
         this.routeService.changeErrorMessage(err)
+        this.router.navigate(['/'])
       }
     )
-    this.router.navigate(['/'])
+    
   }
 
 }
