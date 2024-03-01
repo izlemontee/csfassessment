@@ -31,7 +31,6 @@ public class ProductController {
   @GetMapping(path="/categories")
   @ResponseBody
   public ResponseEntity<String> getCategories() {
-    System.out.println("reached here");
 
     JsonArrayBuilder arrBuilder = Json.createArrayBuilder(prodSvc.getProductCategories());
 
