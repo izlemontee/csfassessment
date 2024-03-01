@@ -8,6 +8,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
 import vttp.batch4.csf.ecommerce.models.Cart;
 import vttp.batch4.csf.ecommerce.models.LineItem;
@@ -37,8 +39,21 @@ public class OrderController {
   public ResponseEntity<String> postOrder(@RequestBody String requestBody) {
     // TODO Task 3
   Order order = convertStringToOrder(requestBody);
-  poSvc.createNewPurchaseOrder(order);
-	 return null;
+  JsonObjectBuilder JOB = Json.createObjectBuilder();
+  try{
+    poSvc.createNewPurchaseOrder(order);
+    
+    JOB.add("orderId",order.getOrderId());
+    ResponseEntity<String> response = ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON)
+                                    .body(JOB.build().toString());
+    return response;
+  }catch(RuntimeException ex){
+    JOB.add("message",ex.getMessage());
+    ResponseEntity<String> response = ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON)
+                                        .body(JOB.build().toString());
+    return response;
+  }
+	
   }
 
   public Order convertStringToOrder(String body){

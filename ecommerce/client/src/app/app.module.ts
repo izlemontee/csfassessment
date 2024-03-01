@@ -11,14 +11,14 @@ import {ProductService} from './product.service';
 import { CategoryComponent } from './components/category.component';
 import { OrderFormComponent } from './components/order-form.component';
 import {ConfirmCheckoutComponent} from './components/confirm-checkout.component';
-import { canCheckout } from './guards';
+import { canCheckout, canExitCheckoutPage } from './guards';
 
 // NOTE: you are free to modify this file
 
 const appRoutes: Routes = [
   {path:'',component:MainComponent},
   {path:'category/:category',component:CategoryComponent},
-  {path:'checkout',component:ConfirmCheckoutComponent, canActivate:[canCheckout]},
+  {path:'checkout',component:ConfirmCheckoutComponent, canActivate:[canCheckout], canDeactivate:[canExitCheckoutPage]},
   {path:'**',redirectTo:'/' ,pathMatch:'full'}
 ]
 

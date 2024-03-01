@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartStore } from '../cart.store';
 import { Cart, LineItem, Order } from '../models';
 import { ProductService } from '../product.service';
+import { RouteService } from '../route.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-checkout',
@@ -15,6 +17,8 @@ export class ConfirmCheckoutComponent implements OnInit{
   private fb = inject(FormBuilder)
   private cartStore = inject(CartStore)
   private productService = inject(ProductService)
+  private routeService = inject(RouteService)
+  private router = inject(Router)
 
   checkoutForm !: FormGroup
   cart!:LineItem[]
@@ -72,7 +76,16 @@ export class ConfirmCheckoutComponent implements OnInit{
     }
 
     console.log(order)
-    this.productService.checkout(order)
+    this.productService.checkout(order).then(
+      (value)=>{this.routeService.changeCheckoutSuccessful(true)
+        this.routeService.changeOrderId(value.orderId)
+      }
+    ).catch(
+      (err)=>{this.routeService.changeCheckoutSuccessful(false)
+        this.routeService.changeErrorMessage(err)
+      }
+    )
+    this.router.navigate(['/'])
   }
 
 }
