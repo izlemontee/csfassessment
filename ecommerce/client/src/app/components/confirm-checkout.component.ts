@@ -20,6 +20,7 @@ export class ConfirmCheckoutComponent implements OnInit{
   private routeService = inject(RouteService)
   private router = inject(Router)
 
+
   checkoutForm !: FormGroup
   cart!:LineItem[]
   total:number=0
@@ -75,15 +76,16 @@ export class ConfirmCheckoutComponent implements OnInit{
       cart:cart
     }
 
-    console.log(order)
     this.productService.checkout(order).then(
       (value)=>{this.routeService.changeCheckoutSuccessful(true)
         this.routeService.changeOrderId(value.orderId)
+        this.cartStore.clearCart()
         this.router.navigate(['/'])
       }
     ).catch(
       (err)=>{this.routeService.changeCheckoutSuccessful(false)
-        this.routeService.changeErrorMessage(err)
+        console.log(err)
+        this.routeService.changeErrorMessage(err.error.message)
         this.router.navigate(['/'])
       }
     )

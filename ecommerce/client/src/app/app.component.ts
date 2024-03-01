@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import { CartStore } from './cart.store';
 import { Cart, LineItem } from './models';
@@ -21,10 +21,13 @@ export class AppComponent implements OnInit {
   itemCount!: number
   cart!:LineItem[]
   cartObservable !: Observable<LineItem[]>
+  cartClearObservable!: Observable<LineItem[]>
 
   ngOnInit(): void {
     this.cartObservable = this.cartStore.getItems
+    //this.cartClearObservable = this.cartStore.clearCart
     this.subscribeToCart()
+    //this.subscribeToClearCart()
     this.itemCount = 0
 
   }
@@ -43,6 +46,22 @@ export class AppComponent implements OnInit {
             this.routeService.changeCanCheckout(true)
           }
         }
+        else{
+          this.cart=[]
+          this.itemCount = this.cart.length
+          this.routeService.changeCanCheckout(false)
+        }
+      }
+    })
+  }
+
+  subscribeToClearCart(){
+    this.cartClearObservable.subscribe({
+      next:(data)=>{
+        console.log("subscribetoClearCart()")
+        this.cart = data
+        this.itemCount = this.cart.length
+        this.routeService.changeCanCheckout(false)
       }
     })
   }

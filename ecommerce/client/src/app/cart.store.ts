@@ -28,4 +28,12 @@ export class CartStore extends ComponentStore<Cart>{
     getItems = this.select<LineItem[]>(
         (slice:Cart)=> slice.lineItems
     )
+
+    clearCart = this.updater((slice)=>({
+        lineItems:[]
+    })
+    )
+        
+
+    
 }
